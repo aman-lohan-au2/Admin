@@ -1,0 +1,10 @@
+let visitedSet = new WeakSet();
+let john = { name: "John" };
+let pete = { name: "Pete" };
+let mary = { name: "Mary" };
+visitedSet.add(john); 
+visitedSet.add(pete); 
+visitedSet.add(john); 
+alert(visitedSet.has(john)); 
+alert(visitedSet.has(mary)); 
+john = null;

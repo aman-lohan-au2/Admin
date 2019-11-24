@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery Get Number of Child Elements in a Div</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    $(document).ready(function(){
+        var matched = $(".content *");
+        alert("Number of elements in content div = " + matched.length);
+    });
+</script>  
+</head> 
+<body>
+    <div class="content">
+        <h1>This is a heading</h1>
+        <p>This is a paragraph.</p>
+        <div>This is just a <em>block of text</em>.</div>
+        <ul>
+            <li>An item of an unordered list</li>
+            <li>Another item of an unordered list</li>
+        </ul>
+    </div>
+</body>
+</html>
