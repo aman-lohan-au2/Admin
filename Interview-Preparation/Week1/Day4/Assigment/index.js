@@ -1,5 +1,5 @@
 function Plus(){
-    let val= document.getElementById("input");
+    var val= document.getElementById("input");
 let newVal=(val.value+"+");
 val.value=newVal;
 }
