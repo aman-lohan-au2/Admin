@@ -1,0 +1,48 @@
+QUERY 1:    SELECT CONCAT(M.FIRSTNAME,'',M.SURNAME) MEMBER,F.NAME FACILITY,F.MEMBERCOST COST
+            FROM PUBLIC.MEMBERS M INNER JOIN PUBLIC.BOOKINGS B
+            ON M.MEMID=B.MEMID INNER JOIN PUBLIC.FACILITIES F
+            ON B.FACID=F.FACID
+            WHERE to_char(M.JOINDATE,'yyyy-mm-dd') = '2012-09-14' AND (F.MEMBERCOST>30 OR F.GUESTCOST>30)
+            ORDER BY COST DESC;
+
+
+QUERY 2 :  Delete From public.members
+           WHERE memid = 37;
+
+
+QUERY 3:    SELECT CONCAT(B.FIRSTNAME,'',B.SURNAME),COUNT(*)
+            FROM PUBLIC.MEMBERS M INNER JOIN PUBLIC.MEMBERS B
+            ON M.MEMID=B.MEMID
+            GROUP BY TO_CHAR(JOINDATE,'YYYY-MM-DD')
+            ORDER BY TO_CHAR(JOINDATE,'YYYY-MM-DD');
+
+
+QUERY 4:   SELECT
+       firstname,
+        surname,
+   CASE 
+  WHEN (SUBSTRING(ROUND(SUM(slots*0.5),0)::text from '.{1}$') IN ('5','6','7','8','9','0')) THEN CEIL(SUM(slots*0.5) /10) * 10 
+  ELSE FLOOR(SUM(slots*0.5) /10) * 10 
+   END AS hours,
+  RANK() OVER(ORDER BY CASE 
+  WHEN (SUBSTRING(ROUND(SUM(slots*0.5),0)::text from '.{1}$') IN ('5','6','7','8','9','0')) THEN CEIL(SUM(slots*0.5) /10) * 10 
+  ELSE FLOOR(SUM(slots*0.5) /10) * 10 
+  END DESC) as rank
+  FROM cd.bookings JOIN cd.members
+   ON cd.bookings.memid = cd.members.memid
+   GROUP BY firstname, surname
+  ORDER BY rank, surname, firstname;
+
+
+QUERY 5:   SELECT MarketDate,
+       RowNumber,
+       ClosingPrice,
+       IIF(RowNumber > 9, MA10, NULL) MA10,
+       IIF(RowNumber > 29, MA30, NULL) MA30,
+       CASE
+          WHEN RowNumber > 29 AND MA10 > MA30 THEN 'Over'
+          WHEN RowNumber > 29 AND MA10 < MA30 THEN 'Below'
+          ELSE NULL
+       END as Signal
+FROM   CTE_DailyQuote
+ORDER BY MarketDate
